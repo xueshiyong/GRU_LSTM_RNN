@@ -6,7 +6,7 @@ class config:
     '''
     model parameters
     '''
-    epochs = 200
+    epochs = 100
     lr = 0.001
     momentum = 0.8
     criterion = nn.MSELoss()
