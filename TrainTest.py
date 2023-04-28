@@ -61,8 +61,6 @@ net = net.to(config.device)
 
 
 
-
-
 def Train(train_loader, net, config):
     optimizer = optim.Adam(net.parameters(), lr = 0.001)
     # optimizer = config.get_optimizer(net.parameters(), lr = config.lr, momentum = config.momentum)
@@ -117,7 +115,7 @@ out = torch.squeeze(out, 1)
 pred_y = out.detach().cpu().numpy()
 true_y = test_label.cpu().numpy()
 
-plt.plot(pred_y[:24 * 16], 'r', true_y[24 * 16], 'b')
+plt.plot(range(24 * 16), pred_y[:24 * 16], 'r', range(24 * 16), true_y[24 * 16], 'b')
 plt.legend(['pred flow', 'real flow'])
 
 
