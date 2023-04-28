@@ -90,7 +90,16 @@ def train_plot_loss(loss_arr, config):
 train_plot_loss(loss_arr, config)
 
 
-
+def Test(test_loader, net, config):
+    net.eval()
+    criterion = config.criterion
+    loss_arr = []
+    for idx, (X, y) in enumerate(test_loader):
+        out, _ = net(X)
+        out = torch.squeeze(out, 1)
+        y = y.float()
+        loss = criterion(out, y)
+        loss_arr.append(loss.cpu().numpy())
 
 
 # test_net = MultiVariLSTM(config.input_size, config.hidden_size, config.output_size)
