@@ -90,46 +90,17 @@ def train_plot_loss(loss_arr, config):
 
 # save_model_pt(net, config)
 # train_plot_loss(loss_arr, config)
+test_data = test_data.to(config.device)
+
+out, _ = net(test_data)
+out = torch.squeeze(out, 1)
+pred_y = out.detach().cpu().numpy()
+
+true_y = test_label.cpu().numpy()
+print("pred: ", pred_y)
+print("true: ", true_y)
 
 
-def Test(test_loader, net, config):
-    net.eval()
-    criterion = config.criterion
-    loss_arr, true_y, pred_y = [], [], []
-    for idx, (X, y) in enumerate(test_loader):
-        out, _ = net(X)
-        out = torch.squeeze(out, 1)
-        y = y.float()
-        loss = criterion(out, y)
-        # loss_arr.append(loss.detach().cpu().numpy())
-        print("y.shape:", y.shape)
-
-        y = y.detach().cpu().numpy()
-        out = out.detach().cpu().numpy()
-
-        for ele in y:
-            true_y.append(ele)
-
-        for lel in y:
-            pred_y.append(lel)
-
-    true_y = np.array(true_y)
-    pred_y = np.array(pred_y)
-
-    return true_y, pred_y
-
-true_y, pred_y = Test(test_loader, net, config)
-
-def evaluate(true_y, pred_y):
-    mae = mean_absolute_error(true_y, pred_y)
-    mse = mean_squared_error(true_y, pred_y)
-
-print("mean absolute error: ", mean_absolute_error(true_y, pred_y))
-print("mse: ", mean_squared_error(true_y, pred_y))
-
-plt.plot(range(true_y.shape[0]), true_y, 'b', range(pred_y.shape[0],  pred_y, 'r'))
-plt.legend(["real", 'pred'])
-plt.show()
 
 torch.cuda.empty_cache()
 
