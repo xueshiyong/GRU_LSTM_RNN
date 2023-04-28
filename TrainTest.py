@@ -115,15 +115,15 @@ out = torch.squeeze(out, 1)
 pred_y = out.detach().cpu().numpy()
 true_y = test_label.cpu().numpy()
 
-plt.plot(range(24 * 16), pred_y[:24 * 16], 'r', range(24 * 16), true_y[24 * 16], 'b')
+plt.figure(2, figsize=(12, 4))
+plt.plot(range(24 * 16), pred_y[:24 * 16], 'r')
+plt.plot(range(24 * 16), true_y[:24 * 16], 'b')
 plt.legend(['pred flow', 'real flow'])
-
 
 
 mae, mse, rmse, r2 = evaluate(true_y, pred_y)
 print("-------------------")
 print("|mae:  {:.3f}|  mse: {:.3f}| rmse:  {:.3f}| r2: {:.3f}".format(mae, mse, rmse, r2))
-
 plt.show()
 
 

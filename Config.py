@@ -28,4 +28,4 @@ class config:
     save net, load net
     '''
     save_net_path = r".\save_model"
-    net_name = "gru" # gru, rnn, lstm
+    net_name = "lstm" # gru, rnn, lstm
