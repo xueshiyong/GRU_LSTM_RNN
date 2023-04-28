@@ -102,20 +102,23 @@ def Test(test_loader, net, config):
         loss = criterion(out, y)
         # loss_arr.append(loss.detach().cpu().numpy())
         print("y.shape:", y.shape)
-        true_y.append(y.cpu().numpy())
-        pred_y.append(out.detach().cpu().numpy())
 
+        y = y.detach().cpu().numpy()
+        out = out.detach().cpu().numpy()
 
+        for ele in y:
+            true_y.append(ele)
+
+        for lel in y:
+            pred_y.append(lel)
 
     true_y = np.array(true_y)
     pred_y = np.array(pred_y)
 
-    true_y = true_y.reshape(-1, 1)
-    pred_y = pred_y.reshape(-1, 1)
-
     return true_y, pred_y
 
 true_y, pred_y = Test(test_loader, net, config)
+
 print("mean absolute error: ", mean_absolute_error(true_y, pred_y))
 
 torch.cuda.empty_cache()
