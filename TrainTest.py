@@ -95,10 +95,12 @@ test_data = test_data.to(config.device)
 out, _ = net(test_data)
 out = torch.squeeze(out, 1)
 pred_y = out.detach().cpu().numpy()
-
 true_y = test_label.cpu().numpy()
+
+
 print("pred: ", pred_y)
 print("true: ", true_y)
+print("MAE: ", mean_absolute_error(true_y, pred_y))
 
 
 
