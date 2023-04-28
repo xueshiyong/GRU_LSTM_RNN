@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import random
 import os
 import numpy as np
+import matplotlib.pyplot as plt
 
 def seed_torch(seed = 0):
     seed = int(seed)
@@ -119,7 +120,16 @@ def Test(test_loader, net, config):
 
 true_y, pred_y = Test(test_loader, net, config)
 
+def evaluate(true_y, pred_y):
+    mae = mean_absolute_error(true_y, pred_y)
+    mse = mean_squared_error(true_y, pred_y)
+
 print("mean absolute error: ", mean_absolute_error(true_y, pred_y))
+print("mse: ", mean_squared_error(true_y, pred_y))
+
+plt.plot(range(true_y.shape[0]), true_y, 'b', range(pred_y.shape[0],  pred_y, 'r'))
+plt.legend(["real", 'pred'])
+plt.show()
 
 torch.cuda.empty_cache()
 
