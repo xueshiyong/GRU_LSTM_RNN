@@ -2,6 +2,7 @@ import torch
 import time
 import torch.nn as nn
 import torch.optim as optim
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 # import model
 from model import MultiVariGRU, MultiVariLSTM
 from data.process_data import GetTrainTestData, GetTrainTestLoader, GetFileNumpy
@@ -87,19 +88,37 @@ def train_plot_loss(loss_arr, config):
                 "_epoch_" + str(config.epochs) + "_train_loss.png")
 
 # save_model_pt(net, config)
-train_plot_loss(loss_arr, config)
+# train_plot_loss(loss_arr, config)
 
 
 def Test(test_loader, net, config):
     net.eval()
     criterion = config.criterion
-    loss_arr = []
+    loss_arr, true_y, pred_y = [], [], []
     for idx, (X, y) in enumerate(test_loader):
         out, _ = net(X)
         out = torch.squeeze(out, 1)
         y = y.float()
         loss = criterion(out, y)
-        loss_arr.append(loss.cpu().numpy())
+        # loss_arr.append(loss.detach().cpu().numpy())
+        print("y.shape:", y.shape)
+        true_y.append(y.cpu().numpy())
+        pred_y.append(out.detach().cpu().numpy())
+
+
+
+    true_y = np.array(true_y)
+    pred_y = np.array(pred_y)
+
+    true_y = true_y.reshape(-1, 1)
+    pred_y = pred_y.reshape(-1, 1)
+
+    return true_y, pred_y
+
+true_y, pred_y = Test(test_loader, net, config)
+print("mean absolute error: ", mean_absolute_error(true_y, pred_y))
+
+torch.cuda.empty_cache()
 
 
 # test_net = MultiVariLSTM(config.input_size, config.hidden_size, config.output_size)
