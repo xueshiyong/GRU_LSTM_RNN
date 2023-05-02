@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.optim as optim
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 # import model
-from model import MultiVariGRU, MultiVariLSTM
+from model import MultiVariGRU, MultiVariLSTM, MultiVariRNN
 from data.process_data import GetTrainTestData, GetTrainTestLoader, GetFileNumpy
 from Config import config
 
@@ -51,6 +51,9 @@ def GetNet(config):
         net = MultiVariGRU(config.input_size, config.hidden_size, config.output_size)
     elif config.net_name == 'lstm':
         net = MultiVariLSTM(config.input_size, config.hidden_size, config.output_size)
+
+    elif config.net_name == 'rnn':
+        net = MultiVariRNN(config.input_size, config.hidden_size)
 
     net = net.to(config.device)
 

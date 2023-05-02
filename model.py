@@ -33,7 +33,7 @@ class MultiVariLSTM(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
         super(MultiVariLSTM, self).__init__()
         self.hidden_size = hidden_size
-        self.GRU_layer = nn.LSTM(input_size=input_size, hidden_size=hidden_size, batch_first=True)
+        self.LSTM_layer = nn.LSTM(input_size=input_size, hidden_size=hidden_size, batch_first=True)
         self.linear_layer = nn.Sequential(
             nn.Linear(self.hidden_size * 13, 64),
             nn.Sigmoid(),
@@ -47,7 +47,31 @@ class MultiVariLSTM(nn.Module):
     def forward(self, x):
         x = x.permute(0, 2, 1)
         x = x.float()
-        x, self.hidden = self.GRU_layer(x)
+        x, self.hidden = self.LSTM_layer(x)
+        x = x.reshape(x.shape[0], -1)
+        x = self.linear_layer(x)
+        return x, self.hidden
+
+
+class MultiVariRNN(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size):
+        super(MultiVariRNN, self).__init__()
+        self.hidden_size = hidden_size
+        self.RNN_layer = nn.RNN(input_size=input_size, hidden_size=hidden_size, batch_first=True)
+        self.linear_layer = nn.Sequential(
+            nn.Linear(self.hidden_size * 13, 64),
+            nn.Sigmoid(),
+            nn.Linear(64, 16),
+            nn.Sigmoid(),
+            nn.Linear(16, 1)
+        )
+        # nn.GRU return shape (len, variable, hidden_size)
+        self.hidden = 0
+
+    def forward(self, x):
+        x = x.permute(0, 2, 1)
+        x = x.float()
+        x, self.hidden = self.RNN_layer(x)
         x = x.reshape(x.shape[0], -1)
         x = self.linear_layer(x)
         return x, self.hidden
